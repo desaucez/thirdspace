@@ -23,6 +23,7 @@ def get_coordinates(address):
     params = {"address": address, "key": API_KEY}
     response = requests.get(url, params=params) 
     data = response.json()
+    print(data)
     location = data["results"][0]["geometry"]["location"]
     return location["lat"], location["lng"]
 
@@ -135,7 +136,7 @@ def snap_to_mrt(lat, lng):
     params = {
         "location": f"{lat},{lng}",
         "radius": 2000,
-        "keyword": "MRT station",
+        "type":"subway_station",
         "key": API_KEY
     }
     response = requests.get(url, params=params)
