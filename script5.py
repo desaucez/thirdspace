@@ -122,11 +122,34 @@ def filter_and_categorise(venues):
         category = categorise_venue(venue["types"])
         if category is None:
             continue
+        if venue["rating"] < 3.5:
+            continue
         venue["category"] = category
         venue["is_free"] = is_free(venue["types"])
         filtered.append(venue)
     filtered.sort(key=lambda x: x["rating"], reverse=True)
     return filtered
+#added this to avoid suggesting locations in industrial areas. so snap to nearest mrt within the midpoint radius, and high chance MRT will have some amenities. 
+def snap_to_mrt(lat, lng):
+    url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
+    params = {
+        "location": f"{lat},{lng}",
+        "radius": 2000,
+        "keyword": "MRT station",
+        "key": API_KEY
+    }
+    response = requests.get(url, params=params)
+    data = response.json()
+    
+    if data["results"]:
+        mrt = data["results"][0]
+        mrt_lat = mrt["geometry"]["location"]["lat"]
+        mrt_lng = mrt["geometry"]["location"]["lng"]
+        mrt_name = mrt["name"]
+        print(f"Snapping to nearest MRT: {mrt_name}")
+        return mrt_lat, mrt_lng
+    
+    return lat, lng
 
 def display_results(addresses, best_point, variance, venues):
     print("\n=== THIRDSPACE RESULTS ===\n")
