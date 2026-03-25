@@ -7,13 +7,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
-
+#added a few more categories because results are inconsistnent. same amendment for script4. 
 VENUE_CATEGORIES = {
-    "cafe": ["cafe", "bakery", "coffee"],
-    "food": ["restaurant", "food", "bar", "meal_takeaway"],
-    "park": ["park", "natural_feature"],
-    "activity": ["movie_theater", "bowling_alley", "amusement_park", "gym", "shopping_mall"],
-    "culture": ["museum", "art_gallery", "library"]
+    "cafe": ["cafe", "bakery", "coffee", "tea"],
+    "food": ["restaurant", "food", "bar", "meal_takeaway", "meal_delivery", "hawker", "food_court"],
+    "park": ["park", "natural_feature", "campground", "beach"],
+    "activity": ["movie_theater", "bowling_alley", "amusement_park", "gym", "shopping_mall", "stadium", "zoo", "aquarium", "night_club"],
+    "culture": ["museum", "art_gallery", "library", "tourist_attraction", "place_of_worship"]
 }
 
 FREE_TYPES = {"park", "natural_feature", "library"}
@@ -154,7 +154,7 @@ def run(addresses):
     best_point, variance = find_fairest_meetup_point(addresses)
 
     print("Fetching nearby venues...")
-    venues = get_nearby_venues(best_point[0], best_point[1])
+    venues = get_nearby_venues(best_point[0], best_point[1], radius=800)
 
     print("Filtering venues...")
     filtered = filter_and_categorise(venues)

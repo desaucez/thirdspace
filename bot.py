@@ -40,7 +40,7 @@ async def handle_address(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Please include your address. Example: /address Tampines, Singapore")
         return
 
-    address = " ".join(context.args)
+    address = " ".join(context.args) + ", Singapore"
     group["addresses"][user_name] = address
 
     await update.message.reply_text(
