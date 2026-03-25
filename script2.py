@@ -14,7 +14,7 @@ load_dotenv()
 
 API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
 
-def get_coordinates(address):
+def get_coordinates(address):                           #this converts the text address like tampines into coordinates. Geocoding api takes an address string and returns lat and lng coordinates. function will return both values as a pair. 
     url = "https://maps.googleapis.com/maps/api/geocode/json"
     params = {
         "address": address,
@@ -25,12 +25,12 @@ def get_coordinates(address):
     location= data["results"][0]["geometry"]["location"]
     return location["lat"], location["lng"]
 
-def get_geometric_midpoint(coordinates):
+def get_geometric_midpoint(coordinates):                #takes a list of coordinates, and finds the avg lat and long. this is a starting reference
     avg_lat = sum(coord[0] for coord in coordinates) / len(coordinates)
     avg_lng = sum(coord[1] for coord in coordinates) / len(coordinates)
     return avg_lat, avg_lng
 
-def get_commute_time_seconds(origin, destination_lat, destination_lng):
+def get_commute_time_seconds(origin, destination_lat, destination_lng):   #similar to script1, but instead of a text address, the destination is a coordinates. We are only testing candidate points as we dont have a real address. also, if element["status"]== "OK" is to check cases where google cant find a transit route, so returns none instead of crashing. 
     url = "https://maps.googleapis.com/maps/api/distancematrix/json"
     params = {
         "origins": origin,
@@ -44,7 +44,7 @@ def get_commute_time_seconds(origin, destination_lat, destination_lng):
         return element["duration"]["value"] 
     return None
 
-def generate_candidates(midpoint_lat, midpoint_lng, radius=0.02, grid_size=3 ): 
+def generate_candidates(midpoint_lat, midpoint_lng, radius=0.02, grid_size=3 ):      #generates a grid of candidate meeting points around the midpoint. radius =0.02 is roughly 2km in coordinate terms. grid size =3 means 3 steps in each direction, and the two nested FOR loops create a grid combining every latitude stepo with every longitidue step. Each combo becomes a candidate coordinate pair added to the list
     candidates = []
     for i in range(-grid_size, grid_size + 1):
         for j in range(-grid_size, grid_size + 1):
@@ -53,7 +53,7 @@ def generate_candidates(midpoint_lat, midpoint_lng, radius=0.02, grid_size=3 ):
             candidates.append((lat, lng))
     return candidates
 
-def find_fairest_meetup_point(addresses):
+def find_fairest_meetup_point(addresses):                                             #list comprehension, loops thru every address and calls get_coordinates on each one, so results are collected into a list. 
     print("Getting coordinates for all addresses...")
     coordinates = [get_coordinates(addr) for addr in addresses]
 
@@ -64,7 +64,7 @@ def find_fairest_meetup_point(addresses):
     print("Generating candidate locations...")
     candidates = generate_candidates(midpoint[0], midpoint[1])
 
-    best_candidate = None
+    best_candidate = None                                                             #set up two variabls to track best result as loops through candidates. float("inf" means infinity, so any real variance we calculate will be lower than it, so first candidate will always be the initial best)
     best_variance = float("inf")
 
     print("Finding fairest meetup point...")

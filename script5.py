@@ -1,3 +1,5 @@
+#combined all scripts for one single end to end flow. used claude to compile and refactor the code. 
+
 import requests
 import os
 from dotenv import load_dotenv
@@ -159,11 +161,12 @@ def run(addresses):
 
     display_results(addresses, best_point, variance, filtered)
 
-addresses = [
+if __name__ == "__main__": #example address for testing. results keep showing up in other code. 
+    addresses = [
     "Tampines, Singapore",
     "Jurong East, Singapore",
     "Woodlands, Singapore",
     "Queenstown, Singapore"
 ]
 
-run(addresses) 
+    run(addresses) 

@@ -4,10 +4,10 @@ def find_overlap(all_availability):
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
     results = []
-
+#loop thru ecah day and create an empty list for each one, which will store each persons slot for that specfic day. 
     for day in days:
         day_slots =[]
-
+#2 nested loops. outer loop goes thru each person, inner loop goes thru each slot of that person, if the slot's day matches the current day we are processing, we add it to the day_slots list. after this nested loop, we have a list of all slots for that specific day, then we can find the overlap.
         for person in all_availability:
             for slot in person["slots"]:
                 if slot["day"] == day:
@@ -16,13 +16,13 @@ def find_overlap(all_availability):
                         "start": slot["start"],
                         "end": slot["end"]
                     })
-
+#if not everyone has a slot for that day, just skip. no point finding an overlap. continue will jump straight to next day in loop/ 
         if len(day_slots) < len(all_availability):
             continue
-
+#impt part. time strings are in format HH:MM so we can compare them directly as strings/ 
         latest_start = max(slot["start"] for slot in day_slots)
         earliest_end = min(slot["end"] for slot in day_slots)
-
+#if latest start is before earliest end, we have a valid overlap. if latest start was after earlioest end, it would mean there are no windows where every1 is free simultaenously/
         if latest_start < earliest_end:
             results.append({
                 "day": day,
@@ -31,7 +31,7 @@ def find_overlap(all_availability):
             })  
 
     return results
-
+#display function. if no overlaps, print no overlapping availability. 
 def display_overlap(results):
     if not results:
         print("No overlapping availability found.")
@@ -40,8 +40,8 @@ def display_overlap(results):
     print("\n=== AVAILABLE MEETING TIMES ===\n")
     for slot in results:
         print(f"{slot['day']}: {slot['start']} to {slot['end']}")
-
-all_availability = [
+if __name__ == "__main__":#just for testing overlap indedependtly
+    all_availability = [
     {
         "name": "Ahmad",
         "slots": [
@@ -71,5 +71,5 @@ all_availability = [
     }
 ]
 
-overlap = find_overlap(all_availability)
-display_overlap(overlap)
+    overlap = find_overlap(all_availability)
+    display_overlap(overlap)
