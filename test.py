@@ -4,15 +4,14 @@ from script7 import find_overlap
 from script4 import VENUE_CATEGORIES
 
 addresses = [
-    "Pasir Ris,Singapore",
-    "Punggol,Singapore",
+    "Home Team Academy,Singapore",
+    "Haji Lane, Singapore"
 ]
 
 availability_messages = [
-    ("Russell", "Saturday 6-8pm and Sunday whole day"),
-    ("Hemz", "Saturday 4pm to 8pm and Sunday anytime"),
-    ("Rahul", "Saturday 12pm to 8 and Sunday 8am-4"),
-    ("Ayaan", "Saturday 3pm to 5pm and Sunday 10am to 7pm")
+    ("Russell", "7pm to 10pm"),
+    ("Hemz", "Saturday whole day"),
+   
 ]
 
 best_point, variance = find_fairest_meetup_point(addresses)
