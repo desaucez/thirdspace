@@ -2,6 +2,7 @@
 
 import requests
 import os
+import time #new, for pagination to generate more venues, for better suggestions
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -13,7 +14,7 @@ VENUE_CATEGORIES = {
     "food": ["restaurant", "food", "bar", "meal_takeaway", "meal_delivery", "hawker", "food_court"],
     "park": ["park", "natural_feature", "campground", "beach"],
     "activity": ["movie_theater", "bowling_alley", "amusement_park", "gym", "shopping_mall", "stadium", "zoo", "aquarium", "night_club"],
-    "culture": ["museum", "art_gallery", "library", "tourist_attraction", "place_of_worship"]
+    "culture": ["museum", "art_gallery", "library", "tourist_attraction"]
 }
 
 FREE_TYPES = {"park", "natural_feature", "library"}
@@ -94,15 +95,28 @@ def get_nearby_venues(lat, lng, radius=1000):
     data = response.json()
 
     venues = []
-    for place in data["results"]:
-        venue = {
-            "name": place["name"],
-            "address": place.get("vicinity", "No address available"),
-            "rating": place.get("rating", 0),
-            "types": place["types"]
-        }
-        venues.append(venue)
-    return venues
+
+    while True:
+        response = requests.get(url, params = params)
+        data = response.json(0)
+
+        for place in data["results"]:
+            venue = {
+                "name": place["name"],
+                "address": place.get("vicinity", "No address available"),
+                "rating": place.get("rating", 0),
+                "types": place["types"]
+            }
+            venues.append(venue)
+
+        next_token = data.get("next_page_token ")
+        if not next_token:
+            break
+
+    time.sleep(2)
+    params = {"pagetoken": next_token, "key":API_KEY}
+
+
 
 def categorise_venue(types):
     for category, keywords in VENUE_CATEGORIES.items():
@@ -176,6 +190,8 @@ def display_results(addresses, best_point, variance, venues):
 def run(addresses):
     print("Finding fairest meeting point...")
     best_point, variance = find_fairest_meetup_point(addresses)
+
+    best_point = snap_to_mrt(best_point[0], best_point[1]) #realised i am not calling this function properly
 
     print("Fetching nearby venues...")
     venues = get_nearby_venues(best_point[0], best_point[1], radius=800)

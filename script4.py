@@ -10,11 +10,11 @@ API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
 
 #dictionary that maps own category names to google's type tags
 VENUE_CATEGORIES = {
-    "cafe": ["cafe", "bakery", "coffee"],
-    "food": ["restaurant", "food", "bar", "meal_takeaway"],
-    "park": ["park", "natural_feature"],
-    "activity": ["movie_theater", "bowling_alley", "amusement_park", "gym", "shopping_mall"],
-    "culture": ["museum", "art_gallery", "library"]
+    "cafe": ["cafe", "bakery", "coffee", "tea"],
+    "food": ["restaurant", "food", "bar", "meal_takeaway", "meal_delivery", "hawker", "food_court"],
+    "park": ["park", "natural_feature", "campground", "beach"],
+    "activity": ["movie_theater", "bowling_alley", "amusement_park", "gym", "shopping_mall", "stadium", "zoo", "aquarium", "night_club"],
+    "culture": ["museum", "art_gallery", "library", "tourist_attraction", "place_of_worship"]
 }
 #list of places google type tags that are considered free
 FREE_TYPES = {"park", "natural_feature", "library"}
