@@ -91,14 +91,11 @@ def get_nearby_venues(lat, lng, radius=1000):
         "type": "establishment",
         "key": API_KEY
     }
-    response = requests.get(url, params=params)
-    data = response.json()
-
     venues = []
 
     while True:
-        response = requests.get(url, params = params)
-        data = response.json(0)
+        response = requests.get(url, params=params)
+        data = response.json()
 
         for place in data["results"]:
             venue = {
@@ -109,7 +106,7 @@ def get_nearby_venues(lat, lng, radius=1000):
             }
             venues.append(venue)
 
-        next_token = data.get("next_page_token ")
+        next_token = data.get("next_page_token")
         if not next_token:
             break
 
